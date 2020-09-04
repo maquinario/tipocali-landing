@@ -40,17 +40,19 @@ describe('Subscribe Component', () => {
   })
   test('Should show name error if validation fails', () => {
     const { sut } = makeSut()
-    const nameInput = sut.getByPlaceholderText('Nome')
+    const inputWrap = sut.getByRole('fieldWrap-name')
+    const nameInput = sut.getByRole('field-name')
     const name = `${faker.name.firstName()} ${faker.name.lastName()}`
     fireEvent.input(nameInput, { target: { value: name } })
-    expect(nameInput.classList).toContain('invalid')
+    expect(inputWrap.classList).toContain('invalid')
   })
   test('Should show email error if validation fails', () => {
     const { sut } = makeSut()
-    const emailInput = sut.getByPlaceholderText('Email')
+    const inputWrap = sut.getByRole('fieldWrap-name')
+    const emailInput = sut.getByRole('field-name')
     const email = faker.internet.email()
     fireEvent.input(emailInput, { target: { value: email } })
-    expect(emailInput.classList).toContain('invalid')
+    expect(inputWrap.classList).toContain('invalid')
   })
   test('Should not add invalid class to name input if Validation succeeds', () => {
     const { sut, validationSpy } = makeSut()
@@ -61,16 +63,16 @@ describe('Subscribe Component', () => {
     expect(nameInput.classList).not.toContain('invalid')
   })
 
-  test('Should call Subscribe with correct values', () => {
-    const { sut, subscribeSpy } = makeSut()
+  test('Should enable submit button if form is valid', () => {
+    const { sut, validationSpy } = makeSut()
+    validationSpy.errorMessage = null
     const nameInput = sut.getByPlaceholderText('Nome')
     const name = `${faker.name.firstName()} ${faker.name.lastName()}`
     fireEvent.input(nameInput, { target: { value: name } })
     const emailInput = sut.getByPlaceholderText('Nome')
     const email = faker.internet.email()
     fireEvent.input(emailInput, { target: { value: email } })
-    const submitBtn = sut.getByRole('submit')
-    fireEvent.click(submitBtn)
-    expect(subscribeSpy.params).toEqual({ name, email })
+    const submitBtn = sut.getByRole('submit') as HTMLButtonElement
+    expect(submitBtn.disabled).toBe(false)
   })
 })
