@@ -30,7 +30,11 @@ const SubscribePage: React.FC<Props> = ({ validation, subscribe }: Props) => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault()
     setState({ ...state, loading: true })
-    await subscribe.subscribe({ name: state.name, email: state.email })
+    try {
+      await subscribe.subscribe({ name: state.name, email: state.email })
+    } catch (error) {
+      console.log(error)
+    }
     setState({ ...state, loading: false })
   }
 
@@ -65,6 +69,7 @@ const SubscribePage: React.FC<Props> = ({ validation, subscribe }: Props) => {
               />
             </div>
             <Button
+              role="submit"
               disabled={!!state.emailError || !!state.nameError}
               type="submit"
             >
