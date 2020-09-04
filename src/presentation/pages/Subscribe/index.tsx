@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
 import { Validation } from '@/presentation/protocols/Validation'
 import { Input, Button, FormStatus } from '@/presentation/components'
 import Context from '@/presentation/contexts/form/form-context'
@@ -10,6 +11,7 @@ type Props = {
 }
 
 const SubscribePage: React.FC<Props> = ({ validation, subscribe }: Props) => {
+  const history = useHistory()
   const [state, setState] = useState({
     loading: false,
     email: '',
@@ -29,11 +31,19 @@ const SubscribePage: React.FC<Props> = ({ validation, subscribe }: Props) => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault()
-    setState({ ...state, loading: true })
     try {
+      if (state.loading || state.emailError || state.nameError) {
+        return
+      }
+      setState({ ...state, loading: true })
       await subscribe.subscribe({ name: state.name, email: state.email })
+      history.replace('sucesso')
     } catch (error) {
-      console.log(error)
+      setState({
+        ...state,
+        loading: false,
+        mainError: error
+      })
     }
     setState({ ...state, loading: false })
   }
