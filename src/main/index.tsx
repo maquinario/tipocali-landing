@@ -1,9 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import Subscribe from '@/presentation/pages/Subscribe'
 import '@/presentation/styles/style.scss'
+import Router from '@/presentation/components/Router'
+import { makeSubscribe } from './factories/pages/Subscribe'
 
 ReactDOM.render(
-  <Subscribe />,
+  <Router makeSubscribe={makeSubscribe} />,
   document.getElementById('main')
 )

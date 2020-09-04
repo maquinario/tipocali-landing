@@ -1,55 +1,38 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Validation } from '@/presentation/protocols/Validation'
+import { Input, Button, FormStatus } from '@/presentation/components'
+import Context from '@/presentation/contexts/form/form-context'
+import { Subscribe } from '@/domain/usecases'
 
 type Props = {
   validation: Validation
+  subscribe: Subscribe
 }
 
-const Subscribe: React.FC<Props> = ({ validation }: Props) => {
+const SubscribePage: React.FC<Props> = ({ validation, subscribe }: Props) => {
   const [state, setState] = useState({
     loading: false,
-    touched: false,
-    name: null,
-    validName: false,
-    email: null,
-    validEmail: false,
-    errorMessage: null
+    email: '',
+    emailError: '',
+    name: '',
+    nameError: '',
+    mainError: ''
   })
 
-  const handleSubmit = useCallback(() => {
+  useEffect(() => {
+    setState({
+      ...state,
+      emailError: validation.validate('email', state.email),
+      nameError: validation.validate('name', state.name)
+    })
+  }, [state.name, state.email])
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault()
-  }, [])
-
-  const handleInputChange = useCallback((event: React.FocusEvent<HTMLInputElement>) => {
-    setState({
-      ...state,
-      [event.target.name]: event.target.value
-    })
-  }, [])
-
-  useEffect(() => {
-    setState({
-      ...state,
-      validName: !validation.validate('name', state.name)
-    })
-  }, [state.name])
-
-  useEffect(() => {
-    setState({
-      ...state,
-      validEmail: !validation.validate('email', state.email)
-    })
-  }, [state.email])
-
-  useEffect(() => {
-    if (state.email || state.name) {
-      const updatedError = (!state.validEmail || !state.validName) ? 'Preencha os campos corretamente' : null
-      setState({
-        ...state,
-        errorMessage: updatedError
-      })
-    }
-  }, [state.validEmail, state.validName])
+    setState({ ...state, loading: true })
+    await subscribe.subscribe({ name: state.name, email: state.email })
+    setState({ ...state, loading: false })
+  }
 
   return (
     <div className="subscribe">
@@ -63,38 +46,36 @@ const Subscribe: React.FC<Props> = ({ validation }: Props) => {
         <div className="subscribe-text">
           <p>Deixe seu nome e e-mail para garantir sua participação</p>
         </div>
-        <form onSubmit={handleSubmit} className="subscribe-form">
-          <div className="subscribe-fields">
-            <input
-              type="text"
-              name="name"
-              placeholder="Nome"
-              className={`form-field field-name ${!state.validName ? 'invalid' : 'valid'}`}
-              onChange={handleInputChange}
-            />
-            <input
-              type="email"
-              name="email"
-              placeholder="Email"
-              className={`form-field field-email ${!state.validEmail && 'invalid'}`}
-              onChange={handleInputChange}
-            />
-            <div role="errors">
-              {state.errorMessage && <div className="subscribe-errors">{state.errorMessage}</div>}
+        <Context.Provider value={{ state, setState }}>
+          <form className="subscribe-form" onSubmit={handleSubmit}>
+            <div className="subscribe-fields">
+              <Input
+                type="text"
+                className="form-field field-name"
+                name="name"
+                value={state.name}
+                placeholder="Nome"
+              />
+              <Input
+                type="email"
+                className="form-field field-email"
+                name="email"
+                value={state.email}
+                placeholder="Email"
+              />
             </div>
-          </div>
-          <button
-            role="submit"
-            type="submit"
-            disabled={!state.validEmail && !state.validName}
-            className={`submitBtn ${state.loading && 'loading'}`}
-          >
-            Cadastrar
-          </button>
-        </form>
+            <Button
+              disabled={!!state.emailError || !!state.nameError}
+              type="submit"
+            >
+              Cadastrar
+            </Button>
+            <FormStatus />
+          </form>
+        </Context.Provider>
       </div>
     </div>
   )
 }
 
-export default Subscribe
+export default SubscribePage

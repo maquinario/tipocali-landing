@@ -94,6 +94,11 @@ body{
   border-radius: 5px;
 }
 
+@keyframes spin{
+  from {transform: rotate(0deg)}
+  to {transform: rotate(360deg)}
+}
+
 .submitBtn{
   padding: 10px 20px;
   background: $red;
@@ -107,5 +112,25 @@ body{
   &:disabled{
     opacity: 0.5;
     cursor: no-drop;
+  }
+
+  &:active,
+  &:focus{
+    outline: none;
+  }
+
+  &.loading{
+    &:after{
+      content: '';
+      display: inline-block;
+      vertical-align: bottom;
+      margin-left: 15px;
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      border: solid 4px $beige;
+      border-top-color: lighten($red, 20);
+      animation: spin 1s infinite linear;
+    }
   }
 }

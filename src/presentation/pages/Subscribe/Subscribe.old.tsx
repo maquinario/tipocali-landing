@@ -1,51 +1,42 @@
 import React from 'react'
 import faker from 'faker'
 import { render, RenderResult, fireEvent, cleanup } from '@testing-library/react'
-import Subscribe from '.'
+import SubscribePage from '.'
 import { ValidationSpy } from '@/presentation/test'
+import { Subscribe, SubscribeParams } from '@/domain/usecases'
+import { SubscriberModel } from '@/domain/models'
+import { mockSubscribe } from '@/domain/test'
 
 type SutTypes = {
   sut: RenderResult
   validationSpy: ValidationSpy
+  subscribeSpy: SubscribeSpy
+}
+
+class SubscribeSpy implements Subscribe {
+  subscriber = mockSubscribe()
+  params: SubscribeParams
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
+  async subscribe (params: SubscribeParams): Promise<SubscriberModel> {
+    return Promise.resolve(this.subscriber)
+  }
 }
 
 const makeSut = (): SutTypes => {
   const validationSpy = new ValidationSpy()
+  const subscribeSpy = new SubscribeSpy()
   const errorMessage = faker.random.words(6)
   validationSpy.errorMessage = errorMessage
-  const sut = render(<Subscribe validation={validationSpy} />)
-  return { sut, validationSpy }
+  const sut = render(<SubscribePage validation={validationSpy} subscribe={subscribeSpy} />)
+  return { sut, validationSpy, subscribeSpy }
 }
 
 describe('Subscribe Component', () => {
   afterEach(cleanup)
-
-  test('Button should be disabled and not be loading', () => {
-    const { sut } = makeSut()
-    const button = sut.getByRole('submit') as HTMLButtonElement
-    expect(button.classList).not.toContain('loading')
-    expect(button.disabled).toBe(true)
-  })
   test('Errors should not be displayed on initial state', () => {
     const { sut } = makeSut()
     const errorContainer = sut.getByRole('errors')
     expect(errorContainer.childElementCount).toBe(0)
-  })
-  test('Errors call validation with correct email', () => {
-    const { sut, validationSpy } = makeSut()
-    const emailInput = sut.getByPlaceholderText('Email')
-    const email = faker.internet.email()
-    fireEvent.input(emailInput, { target: { value: email } })
-    expect(validationSpy.fieldName).toBe('email')
-    expect(validationSpy.fieldValue).toBe(email)
-  })
-  test('Errors call validation with correct name', () => {
-    const { sut, validationSpy } = makeSut()
-    const nameInput = sut.getByPlaceholderText('Nome')
-    const name = `${faker.name.firstName()} ${faker.name.lastName()}`
-    fireEvent.input(nameInput, { target: { value: name } })
-    expect(validationSpy.fieldName).toBe('name')
-    expect(validationSpy.fieldValue).toBe(name)
   })
   test('Should show name error if validation fails', () => {
     const { sut } = makeSut()
@@ -68,5 +59,18 @@ describe('Subscribe Component', () => {
     const name = `${faker.name.firstName()} ${faker.name.lastName()}`
     fireEvent.input(nameInput, { target: { value: name } })
     expect(nameInput.classList).not.toContain('invalid')
+  })
+
+  test('Should call Subscribe with correct values', () => {
+    const { sut, subscribeSpy } = makeSut()
+    const nameInput = sut.getByPlaceholderText('Nome')
+    const name = `${faker.name.firstName()} ${faker.name.lastName()}`
+    fireEvent.input(nameInput, { target: { value: name } })
+    const emailInput = sut.getByPlaceholderText('Nome')
+    const email = faker.internet.email()
+    fireEvent.input(emailInput, { target: { value: email } })
+    const submitBtn = sut.getByRole('submit')
+    fireEvent.click(submitBtn)
+    expect(subscribeSpy.params).toEqual({ name, email })
   })
 })
