@@ -5,6 +5,7 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   box-sizing: border-box;
+  cursor: url(../images/cursor.png), auto;
 }
 
 button{
@@ -58,11 +59,18 @@ body{
   text-align: center;
 }
 
+.inputWrapper{
+  &.valid{
+    border-bottom: solid 2px $green;
+  }
+}
+
 .form-field{
   border: 0;
   background: #fff;
   font: 1em $font;
   padding: 10px 15px;
+  width: 100%;
 
   &:focus{
     outline: none;
@@ -75,12 +83,12 @@ body{
   margin-bottom: 30px;
 }
 
-.field-name{
+.inputWrapper-name{
   flex: 2;
   margin-right: 30px;
 }
 
-.field-email{
+.inputWrapper-email{
   flex: 3;
 }
 

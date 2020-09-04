@@ -6,7 +6,7 @@ const FormStatus: React.FC = () => {
   const { mainError } = state
 
   return (
-    <div className="errorWrap">
+    <div role="errors" className="errorWrap">
       {mainError && <p className="error">{mainError}</p>}
     </div>
   )

@@ -13,9 +13,13 @@ const Input: React.FC<Props> = (props: Props) => {
     })
   }
 
+  const isValid = (): string => {
+    return state[`${props.name}Error`] ? 'invalid' : 'valid'
+  }
+
   return (
-    <div className="inputWrapper">
-      <input {...props} onChange={handleChange} />
+    <div role={`fieldWrap-${props.name}`} className={`inputWrapper ${`inputWrapper-${props.name}`} ${isValid()}`}>
+      <input role={`field-${props.name}`} {...props} onChange={handleChange} />
     </div>
   )
 }
