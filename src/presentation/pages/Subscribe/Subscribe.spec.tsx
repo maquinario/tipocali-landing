@@ -18,6 +18,7 @@ class SubscribeSpy implements Subscribe {
   params: SubscribeParams
   // eslint-disable-next-line @typescript-eslint/no-unused-vars-experimental
   async subscribe (params: SubscribeParams): Promise<SubscriberModel> {
+    this.params = params
     return Promise.resolve(this.subscriber)
   }
 }
@@ -48,8 +49,8 @@ describe('Subscribe Component', () => {
   })
   test('Should show email error if validation fails', () => {
     const { sut } = makeSut()
-    const inputWrap = sut.getByRole('fieldWrap-name')
-    const emailInput = sut.getByRole('field-name')
+    const inputWrap = sut.getByRole('fieldWrap-email')
+    const emailInput = sut.getByRole('field-email')
     const email = faker.internet.email()
     fireEvent.input(emailInput, { target: { value: email } })
     expect(inputWrap.classList).toContain('invalid')
@@ -74,5 +75,22 @@ describe('Subscribe Component', () => {
     fireEvent.input(emailInput, { target: { value: email } })
     const submitBtn = sut.getByRole('submit') as HTMLButtonElement
     expect(submitBtn.disabled).toBe(false)
+  })
+
+  test('Should call Subscribe with correct values', () => {
+    const { sut, subscribeSpy } = makeSut()
+
+    const nameInput = sut.getByRole('field-name')
+    const name = `${faker.name.firstName()} ${faker.name.lastName()}`
+    fireEvent.input(nameInput, { target: { value: name } })
+
+    const emailInput = sut.getByRole('field-email')
+    const email = faker.internet.email()
+    fireEvent.input(emailInput, { target: { value: email } })
+
+    const submitBtn = sut.getByRole('submit')
+    fireEvent.click(submitBtn)
+    expect(subscribeSpy.subscriber).toHaveProperty('name')
+    expect(subscribeSpy.subscriber).toHaveProperty('email')
   })
 })
