@@ -2,6 +2,7 @@ import faker from 'faker'
 import { HttpPostClient } from '../../protocols/http/HttpPostClient'
 import { RemoteSubscribe } from './RemoteSubscribe'
 import { HttpPostClientSpy } from '@/data/test/MockHttpClient'
+import { mockSubscribe } from '@/domain/test/MockSubscribe'
 
 type SutTypes = {
   sut: RemoteSubscribe
@@ -20,7 +21,13 @@ const makeSut = (): SutTypes => {
 describe('RemoteSubscribe', () => {
   test('Should call HttpPostClient with correct url', async () => {
     const { sut, httpPostClientSpy } = makeSut()
-    await sut.subscribe()
+    await sut.subscribe(mockSubscribe())
     expect(httpPostClientSpy.url).toBe(url)
+  })
+  test('Should call HttpPostClient with correct body', async () => {
+    const { sut, httpPostClientSpy } = makeSut()
+    const subscribeParams = mockSubscribe()
+    await sut.subscribe(subscribeParams)
+    expect(httpPostClientSpy.body).toEqual(subscribeParams)
   })
 })
