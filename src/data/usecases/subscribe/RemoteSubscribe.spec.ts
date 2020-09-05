@@ -3,6 +3,8 @@ import { HttpPostClient } from '../../protocols/http/HttpPostClient'
 import { RemoteSubscribe } from './RemoteSubscribe'
 import { HttpPostClientSpy } from '@/data/test/MockHttpClient'
 import { mockSubscribe } from '@/domain/test/MockSubscribe'
+import { HttpStatusCode } from '@/data/protocols/http/HttpResponse'
+import { UnexpectedError } from '@/domain/errors/UnexpectedError'
 
 type SutTypes = {
   sut: RemoteSubscribe
@@ -29,5 +31,13 @@ describe('RemoteSubscribe', () => {
     const subscribeParams = mockSubscribe()
     await sut.subscribe(subscribeParams)
     expect(httpPostClientSpy.body).toEqual(subscribeParams)
+  })
+  test('Should throw UnexpectedError if HttpPostClient returns 400', async () => {
+    const { sut, httpPostClientSpy } = makeSut()
+    httpPostClientSpy.response = {
+      statusCode: HttpStatusCode.badRequest
+    }
+    const promise = sut.subscribe(mockSubscribe())
+    expect(promise).rejects.toThrow(new UnexpectedError())
   })
 })
