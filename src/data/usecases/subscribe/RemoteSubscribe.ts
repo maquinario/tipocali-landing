@@ -1,5 +1,7 @@
 import { HttpPostClient } from '@/data/protocols/http/HttpPostClient'
 import { SubscribeParams } from '@/domain/usecases/Subscribe'
+import { HttpStatusCode } from '@/data/protocols/http/HttpResponse'
+import { UnexpectedError } from '@/domain/errors/UnexpectedError'
 
 export class RemoteSubscribe {
   constructor (
@@ -8,9 +10,13 @@ export class RemoteSubscribe {
   ) {}
 
   async subscribe (params: SubscribeParams): Promise<void> {
-    await this.httpPostClient.post({
+    const httpResponse = await this.httpPostClient.post({
       url: this.url,
       body: params
     })
+    switch(httpResponse.statusCode){
+      case HttpStatusCode.ok: break
+      default: throw new UnexpectedError()
+    }
   }
 }
