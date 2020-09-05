@@ -1,6 +1,6 @@
 import { SubscriberModel } from '../models/SubscriberModel'
 
-type SubscribeParams = {
+export type SubscribeParams = {
   name: string
   email: string
 }

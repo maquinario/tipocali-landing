@@ -1,4 +1,5 @@
 import { HttpPostClient } from '@/data/protocols/http/HttpPostClient'
+import { SubscribeParams } from '@/domain/usecases/Subscribe'
 
 export class RemoteSubscribe {
   constructor (
@@ -6,9 +7,10 @@ export class RemoteSubscribe {
     private readonly httpPostClient: HttpPostClient
   ) {}
 
-  async subscribe (): Promise<void> {
+  async subscribe (params: SubscribeParams): Promise<void> {
     await this.httpPostClient.post({
-      url: this.url
+      url: this.url,
+      body: params
     })
   }
 }
