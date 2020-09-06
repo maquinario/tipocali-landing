@@ -2,7 +2,7 @@ import faker from 'faker'
 import { HttpPostClient } from '../../protocols/http/HttpPostClient'
 import { RemoteSubscribe } from './RemoteSubscribe'
 import { HttpPostClientSpy } from '@/data/test/MockHttpClient'
-import { mockSubscribe } from '@/domain/test/MockSubscribe'
+import { mockSubscribe } from '@/domain/test/MockSubscriber'
 import { HttpStatusCode } from '@/data/protocols/http/HttpResponse'
 import { UnexpectedError } from '@/domain/errors/UnexpectedError'
 import { SubscribeParams } from '@/domain/usecases/Subscribe'
@@ -58,12 +58,14 @@ describe('RemoteSubscribe', () => {
     const promise = sut.subscribe(mockSubscribe())
     expect(promise).rejects.toThrow(new UnexpectedError())
   })
-  test('Should throw ServerError if HttpPostClient returns 404', async () => {
+  test('Should return a SubscriberModel if HttpPostClient returns 200', async () => {
     const { sut, httpPostClientSpy } = makeSut()
+    const httpResult = mockSubscribe()
     httpPostClientSpy.response = {
-      statusCode: HttpStatusCode.notFound
+      statusCode: HttpStatusCode.ok,
+      body: httpResult
     }
-    const promise = sut.subscribe(mockSubscribe())
-    expect(promise).rejects.toThrow(new UnexpectedError())
+    const account = await sut.subscribe(mockSubscribe())
+    expect(account).toEqual(httpResult)
   })
 })
