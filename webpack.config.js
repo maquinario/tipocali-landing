@@ -1,19 +1,46 @@
 const path = require('path')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 module.exports = {
   mode: 'development',
   entry: './src/main/index.tsx',
   output: {
-    path: path.join(__dirname, 'public/js'),
+    path: path.resolve(__dirname, 'public/js'),
     publicPath: '/public/js',
     filename: 'bundle.js'
   },
   resolve: {
-    extensions: ['.ts','.tsx','.js'],
+    extensions: ['.ts','.tsx','.js', 'scss', 'svg'],
     alias: {
-      '@': path.join(__dirname, 'src')
+      '@': path.resolve(__dirname, 'src')
     }
+  },
+  module: {
+    rules: [
+      {
+        test: /\.ts(x?)$/,
+        loader: 'ts-loader',
+        exclude: '/node_modules'
+      },
+      {
+        test: /\.svg$/,
+        use: [
+          {
+            loader: 'svg-url-loader',
+            options: {
+              limit: 10000
+            }
+          }
+        ]
+      },
+      {
+        test: /\.scss$/,
+        use: ExtractTextPlugin.extract({
+          use: ['css-loader', 'sass-loader']
+        })
+      }
+    ]
   },
   devServer: {
     contentBase: './public',
@@ -25,6 +52,7 @@ module.exports = {
     'react-dom': 'ReactDOM'
   },
   plugins: [
-    new CleanWebpackPlugin()
+    new CleanWebpackPlugin(),
+    new ExtractTextPlugin('css/styles.css'),
   ]
 }
