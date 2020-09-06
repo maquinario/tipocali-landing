@@ -63,11 +63,16 @@ body{
   background: #fff;
   font: 1em $font;
   padding: 10px 15px;
-  margin-bottom: 30px;
+
+  &:focus{
+    outline: none;
+  }
 }
 
 .subscribe-fields{
   display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 30px;
 }
 
 .field-name{
@@ -79,6 +84,16 @@ body{
   flex: 3;
 }
 
+.subscribe-errors{
+  width: 100%;
+  margin: 20px 0 0;
+  background-color: rgba($red, .3);
+  padding: 5px 10px;
+  border: solid 1px darken($red,10);
+  color: darken($red,10);
+  border-radius: 5px;
+}
+
 .submitBtn{
   padding: 10px 20px;
   background: $red;
@@ -88,4 +103,9 @@ body{
   text-transform: uppercase;
   letter-spacing: 0.1em;
   float: right;
+
+  &:disabled{
+    opacity: 0.5;
+    cursor: no-drop;
+  }
 }

@@ -33,7 +33,9 @@ const Subscribe: React.FC = () => {
               placeholder="Email"
               className="form-field field-email"
             />
-            {errorMessage && errorMessage}
+            <div role="errors">
+              {errorMessage && <div className="subscribe-errors">{errorMessage}</div>}
+            </div>
           </div>
           <button
             role="submit"
