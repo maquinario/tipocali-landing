@@ -1,0 +1,14 @@
+*{
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+button{
+  cursor: pointer;
+}
+
+body{
+  margin: 0;
+  background-image: url(../images/bg.jpg);
+  background-size: cover;
+}

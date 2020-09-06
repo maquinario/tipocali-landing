@@ -34,17 +34,22 @@ module.exports = {
       ]
     },
     {
+      test: /\.(png|svg|jpg|jpeg|gif)$/,
+      loader: 'file-loader',
+      options: { outputPath: 'images' }
+    },
+    {
       test: /\.(sa|sc|c)ss$/,
       use: [
         {
           loader: MiniCssExtractPlugin.loader,
           options: {
-            publicPath: '/public/dist/css/',
+            publicPath: '/public/dist/',
           },
         },
-        'css-loader',
+        { loader: 'css-loader', options: { url: true, sourceMap: false }},
         'postcss-loader',
-        'sass-loader',
+        { loader: 'sass-loader', options: { sourceMap: false } }
       ]
     }]
   },
