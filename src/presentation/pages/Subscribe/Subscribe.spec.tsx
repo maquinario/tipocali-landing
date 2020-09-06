@@ -9,4 +9,9 @@ describe('Subscribe Component', () => {
     expect(button.classList).not.toContain('loading')
     expect(button.disabled).toBe(true)
   })
+  test('Errors should not be displayed on initial state', () => {
+    const { getByRole } = render(<Subscribe />)
+    const errorContainer = getByRole('errors')
+    expect(errorContainer.childElementCount).toBe(0)
+  })
 })
