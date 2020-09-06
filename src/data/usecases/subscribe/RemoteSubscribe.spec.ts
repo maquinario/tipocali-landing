@@ -18,7 +18,7 @@ const makeSut = (): SutTypes => {
   const httpPostClientSpy = new HttpPostClientSpy<SubscribeParams, SubscriberModel>()
   const sut = new RemoteSubscribe(url, httpPostClientSpy)
 
-  return { sut, httpPostClientSpy}
+  return { sut, httpPostClientSpy }
 }
 
 describe('RemoteSubscribe', () => {
@@ -39,7 +39,7 @@ describe('RemoteSubscribe', () => {
       statusCode: HttpStatusCode.badRequest
     }
     const promise = sut.subscribe(mockSubscribe())
-    expect(promise).rejects.toThrow(new UnexpectedError())
+    await expect(promise).rejects.toThrow(new UnexpectedError())
   })
   test('Should throw ServerError if HttpPostClient returns 500', async () => {
     const { sut, httpPostClientSpy } = makeSut()
@@ -47,7 +47,7 @@ describe('RemoteSubscribe', () => {
       statusCode: HttpStatusCode.serverError
     }
     const promise = sut.subscribe(mockSubscribe())
-    expect(promise).rejects.toThrow(new UnexpectedError())
+    await expect(promise).rejects.toThrow(new UnexpectedError())
   })
   test('Should throw ServerError if HttpPostClient returns 404', async () => {
     const { sut, httpPostClientSpy } = makeSut()
@@ -55,7 +55,7 @@ describe('RemoteSubscribe', () => {
       statusCode: HttpStatusCode.notFound
     }
     const promise = sut.subscribe(mockSubscribe())
-    expect(promise).rejects.toThrow(new UnexpectedError())
+    await expect(promise).rejects.toThrow(new UnexpectedError())
   })
   test('Should return a SubscriberModel if HttpPostClient returns 200', async () => {
     const { sut, httpPostClientSpy } = makeSut()

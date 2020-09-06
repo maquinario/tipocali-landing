@@ -14,7 +14,7 @@ export class RemoteSubscribe implements Subscribe {
       url: this.url,
       body: params
     })
-    switch(httpResponse.statusCode){
+    switch (httpResponse.statusCode) {
       case HttpStatusCode.ok: return httpResponse.body
       default: throw new UnexpectedError()
     }
