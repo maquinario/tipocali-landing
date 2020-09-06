@@ -1,12 +1,11 @@
 import faker from 'faker'
-import { HttpPostClient } from '../../protocols/http/HttpPostClient'
 import { RemoteSubscribe } from './RemoteSubscribe'
-import { HttpPostClientSpy } from '@/data/test/MockHttpClient'
-import { mockSubscribe } from '@/domain/test/MockSubscriber'
-import { HttpStatusCode } from '@/data/protocols/http/HttpResponse'
-import { UnexpectedError } from '@/domain/errors/UnexpectedError'
-import { SubscribeParams } from '@/domain/usecases/Subscribe'
-import { SubscriberModel } from '@/domain/models/SubscriberModel'
+import { HttpPostClientSpy } from '@/data/test'
+import { mockSubscribe } from '@/domain/test'
+import { HttpStatusCode } from '@/data/protocols/http'
+import { UnexpectedError } from '@/domain/errors'
+import { SubscribeParams } from '@/domain/usecases'
+import { SubscriberModel } from '@/domain/models'
 
 type SutTypes = {
   sut: RemoteSubscribe

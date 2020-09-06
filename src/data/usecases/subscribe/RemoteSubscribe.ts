@@ -1,8 +1,7 @@
-import { HttpPostClient } from '@/data/protocols/http/HttpPostClient'
-import { SubscribeParams, Subscribe } from '@/domain/usecases/Subscribe'
-import { HttpStatusCode } from '@/data/protocols/http/HttpResponse'
-import { UnexpectedError } from '@/domain/errors/UnexpectedError'
-import { SubscriberModel } from '@/domain/models/SubscriberModel'
+import { HttpPostClient, HttpStatusCode } from '@/data/protocols/http'
+import { SubscribeParams, Subscribe } from '@/domain/usecases'
+import { UnexpectedError } from '@/domain/errors'
+import { SubscriberModel } from '@/domain/models'
 
 export class RemoteSubscribe implements Subscribe {
   constructor (

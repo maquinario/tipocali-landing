@@ -1,4 +1,4 @@
-import { SubscriberModel } from '../models/SubscriberModel'
+import { SubscriberModel } from '../models'
 
 export type SubscribeParams = {
   name: string
