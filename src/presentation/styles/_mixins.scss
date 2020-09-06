@@ -1,0 +1,7 @@
+@mixin imgreplace {
+  text-indent: -9000px;
+  line-height: 0;
+  font-size: 0;
+  overflow: hidden;
+  display: inline-block;
+}

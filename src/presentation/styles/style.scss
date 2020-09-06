@@ -1,6 +1,10 @@
+@import 'variables';
+@import 'mixins';
+
 *{
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  box-sizing: border-box;
 }
 
 button{
@@ -8,7 +12,80 @@ button{
 }
 
 body{
+  font-size: 16px;
   margin: 0;
   background-image: url(../images/bg.jpg);
   background-size: cover;
+  display: flex;
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
+}
+
+.subscribe{
+  background: $beige;
+  padding: 80px 50px;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  margin: 0 auto;
+}
+
+.subscribe-container{
+  display: flex;
+  flex-direction: column;
+}
+
+.subscribe-title{
+  @include imgreplace;
+  background-image: url(../images/headline.png);
+  width: 350px;
+  height: 180px;
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+  margin: 0 auto 40px;
+}
+
+.subscribe-subtitle{
+  font: $bold 1.2em $font;
+  color: $red;
+  text-align: center;
+}
+
+.subscribe-text{
+  font: 1em $font;
+  text-align: center;
+}
+
+.form-field{
+  border: 0;
+  background: #fff;
+  font: 1em $font;
+  padding: 10px 15px;
+  margin-bottom: 30px;
+}
+
+.subscribe-fields{
+  display: flex;
+}
+
+.field-name{
+  flex: 2;
+  margin-right: 30px;
+}
+
+.field-email{
+  flex: 3;
+}
+
+.submitBtn{
+  padding: 10px 20px;
+  background: $red;
+  border: 0;
+  font: 1.1em $serif;
+  color: $beige;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  float: right;
 }
