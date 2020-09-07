@@ -45,4 +45,12 @@ describe('Subscribe Component', () => {
       email: 'any_email'
     })
   })
+  test('Errors call validation with correct name', () => {
+    const { sut, validationSpy } = makeSut()
+    const nameInput = sut.getByPlaceholderText('Nome')
+    fireEvent.input(nameInput, { target: { value: 'any_name' } })
+    expect(validationSpy.input).toEqual({
+      name: 'any_name'
+    })
+  })
 })
