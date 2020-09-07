@@ -1,13 +1,33 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
+import { Validation } from '@/presentation/protocols/Validation'
 
-const Subscribe: React.FC = () => {
-  const [loading] = useState<Boolean>(false)
-  const [valid] = useState<Boolean>(false)
-  const [errorMessage] = useState<string>(null)
+type Props = {
+  validation: Validation
+}
+
+const Subscribe: React.FC<Props> = ({ validation }: Props) => {
+  const [state, setState] = useState({
+    loading: false,
+    valid: false,
+    name: null,
+    email: null,
+    errorMessage: null
+  })
 
   const handleSubmit = useCallback(() => {
     event.preventDefault()
-  }, [valid])
+  }, [state.valid])
+
+  const handleInputChange = useCallback((event: React.FocusEvent<HTMLInputElement>) => {
+    setState({
+      ...state,
+      [event.target.name]: event.target.value
+    })
+  }, [state.valid])
+
+  useEffect(() => {
+    validation.validate({ email: state.email })
+  }, [state.email])
 
   return (
     <div className="subscribe">
@@ -25,23 +45,27 @@ const Subscribe: React.FC = () => {
           <div className="subscribe-fields">
             <input
               type="text"
+              name="name"
               placeholder="Nome"
               className="form-field field-name"
+              onChange={handleInputChange}
             />
             <input
               type="email"
+              name="email"
               placeholder="Email"
               className="form-field field-email"
+              onChange={handleInputChange}
             />
             <div role="errors">
-              {errorMessage && <div className="subscribe-errors">{errorMessage}</div>}
+              {state.errorMessage && <div className="subscribe-errors">{state.errorMessage}</div>}
             </div>
           </div>
           <button
             role="submit"
             type="submit"
-            disabled={!valid}
-            className={`submitBtn ${loading && 'loading'}`}
+            disabled={!state.valid}
+            className={`submitBtn ${state.loading && 'loading'}`}
           >
             Cadastrar
           </button>
