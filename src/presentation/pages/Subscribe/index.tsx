@@ -26,12 +26,17 @@ const Subscribe: React.FC<Props> = ({ validation }: Props) => {
   }, [state.valid])
 
   useEffect(() => {
-    validation.validate('email', state.email)
-  }, [state.email])
-
-  useEffect(() => {
+    const updatedError = (state.name && state.name) ? 'Preencha os campos corretamente' : null
+    setState({
+      ...state,
+      errorMessage: updatedError
+    })
     validation.validate('name', state.name)
   }, [state.name])
+
+  useEffect(() => {
+    validation.validate('email', state.email)
+  }, [state.email])
 
   return (
     <div className="subscribe">
@@ -51,14 +56,14 @@ const Subscribe: React.FC<Props> = ({ validation }: Props) => {
               type="text"
               name="name"
               placeholder="Nome"
-              className="form-field field-name"
+              className={`form-field field-name ${!state.valid && 'invalid'}`}
               onChange={handleInputChange}
             />
             <input
               type="email"
               name="email"
               placeholder="Email"
-              className="form-field field-email"
+              className={`form-field field-email ${!state.valid && 'invalid'}`}
               onChange={handleInputChange}
             />
             <div role="errors">
