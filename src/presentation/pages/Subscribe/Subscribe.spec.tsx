@@ -11,6 +11,8 @@ type SutTypes = {
 
 const makeSut = (): SutTypes => {
   const validationSpy = new ValidationSpy()
+  const errorMessage = faker.random.words(6)
+  validationSpy.errorMessage = errorMessage
   const sut = render(<Subscribe validation={validationSpy} />)
   return { sut, validationSpy }
 }
@@ -44,5 +46,14 @@ describe('Subscribe Component', () => {
     fireEvent.input(nameInput, { target: { value: name } })
     expect(validationSpy.fieldName).toBe('name')
     expect(validationSpy.fieldValue).toBe(name)
+  })
+  test('Should show name error if validation fails', () => {
+    const { sut } = makeSut()
+    const nameInput = sut.getByPlaceholderText('Nome')
+    const errorContainer = sut.getByRole('errors')
+    const name = `${faker.name.firstName()} ${faker.name.lastName()}`
+    fireEvent.input(nameInput, { target: { value: name } })
+    expect(nameInput.classList).toContain('invalid')
+    expect(errorContainer.childElementCount).toBeTruthy()
   })
 })
