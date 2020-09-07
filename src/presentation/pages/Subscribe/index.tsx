@@ -26,11 +26,11 @@ const Subscribe: React.FC<Props> = ({ validation }: Props) => {
   }, [state.valid])
 
   useEffect(() => {
-    validation.validate({ email: state.email })
+    validation.validate('email', state.email)
   }, [state.email])
 
   useEffect(() => {
-    validation.validate({ name: state.name })
+    validation.validate('name', state.name)
   }, [state.name])
 
   return (
