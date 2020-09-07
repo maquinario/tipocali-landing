@@ -1,22 +1,12 @@
 import React from 'react'
+import faker from 'faker'
 import { render, RenderResult, fireEvent, cleanup } from '@testing-library/react'
 import Subscribe from '.'
-import { Validation } from '@/presentation/protocols/Validation'
+import { ValidationSpy } from '@/presentation/test'
 
 type SutTypes = {
   sut: RenderResult
   validationSpy: ValidationSpy
-}
-
-class ValidationSpy implements Validation {
-  errorMessage: string
-  fieldName: string
-  fieldValue: string
-  validate (fieldName: string, fieldValue: string): string {
-    this.fieldName = fieldName
-    this.fieldValue = fieldValue
-    return this.errorMessage
-  }
 }
 
 const makeSut = (): SutTypes => {
@@ -42,15 +32,17 @@ describe('Subscribe Component', () => {
   test('Errors call validation with correct email', () => {
     const { sut, validationSpy } = makeSut()
     const emailInput = sut.getByPlaceholderText('Email')
-    fireEvent.input(emailInput, { target: { value: 'any_email' } })
+    const email = faker.internet.email()
+    fireEvent.input(emailInput, { target: { value: email } })
     expect(validationSpy.fieldName).toBe('email')
-    expect(validationSpy.fieldValue).toBe('any_email')
+    expect(validationSpy.fieldValue).toBe(email)
   })
   test('Errors call validation with correct name', () => {
     const { sut, validationSpy } = makeSut()
     const nameInput = sut.getByPlaceholderText('Nome')
-    fireEvent.input(nameInput, { target: { value: 'any_name' } })
+    const name = `${faker.name.firstName()} ${faker.name.lastName()}`
+    fireEvent.input(nameInput, { target: { value: name } })
     expect(validationSpy.fieldName).toBe('name')
-    expect(validationSpy.fieldValue).toBe('any_name')
+    expect(validationSpy.fieldValue).toBe(name)
   })
 })
