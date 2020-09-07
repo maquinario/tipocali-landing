@@ -56,4 +56,13 @@ describe('Subscribe Component', () => {
     expect(nameInput.classList).toContain('invalid')
     expect(errorContainer.childElementCount).toBeTruthy()
   })
+  test('Should show email error if validation fails', () => {
+    const { sut } = makeSut()
+    const emailInput = sut.getByPlaceholderText('Email')
+    const errorContainer = sut.getByRole('errors')
+    const email = faker.internet.email()
+    fireEvent.input(emailInput, { target: { value: email } })
+    expect(emailInput.classList).toContain('invalid')
+    expect(errorContainer.childElementCount).toBeTruthy()
+  })
 })
