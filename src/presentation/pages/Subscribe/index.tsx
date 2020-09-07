@@ -29,6 +29,10 @@ const Subscribe: React.FC<Props> = ({ validation }: Props) => {
     validation.validate({ email: state.email })
   }, [state.email])
 
+  useEffect(() => {
+    validation.validate({ name: state.name })
+  }, [state.name])
+
   return (
     <div className="subscribe">
       <div className="subscribe-container">
