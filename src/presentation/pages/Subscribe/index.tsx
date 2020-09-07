@@ -35,6 +35,11 @@ const Subscribe: React.FC<Props> = ({ validation }: Props) => {
   }, [state.name])
 
   useEffect(() => {
+    const updatedError = (state.email && state.email) ? 'Preencha os campos corretamente' : null
+    setState({
+      ...state,
+      errorMessage: updatedError
+    })
     validation.validate('email', state.email)
   }, [state.email])
 
