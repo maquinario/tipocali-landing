@@ -8,40 +8,48 @@ type Props = {
 const Subscribe: React.FC<Props> = ({ validation }: Props) => {
   const [state, setState] = useState({
     loading: false,
-    valid: false,
+    touched: false,
     name: null,
+    validName: false,
     email: null,
+    validEmail: false,
     errorMessage: null
   })
 
   const handleSubmit = useCallback(() => {
     event.preventDefault()
-  }, [state.valid])
+  }, [])
 
   const handleInputChange = useCallback((event: React.FocusEvent<HTMLInputElement>) => {
     setState({
       ...state,
       [event.target.name]: event.target.value
     })
-  }, [state.valid])
+  }, [])
 
   useEffect(() => {
-    const updatedError = (state.name && state.name) ? 'Preencha os campos corretamente' : null
     setState({
       ...state,
-      errorMessage: updatedError
+      validName: !validation.validate('name', state.name)
     })
-    validation.validate('name', state.name)
   }, [state.name])
 
   useEffect(() => {
-    const updatedError = (state.email && state.email) ? 'Preencha os campos corretamente' : null
     setState({
       ...state,
-      errorMessage: updatedError
+      validEmail: !validation.validate('email', state.email)
     })
-    validation.validate('email', state.email)
   }, [state.email])
+
+  useEffect(() => {
+    if (state.email || state.name) {
+      const updatedError = (!state.validEmail || !state.validName) ? 'Preencha os campos corretamente' : null
+      setState({
+        ...state,
+        errorMessage: updatedError
+      })
+    }
+  }, [state.validEmail, state.validName])
 
   return (
     <div className="subscribe">
@@ -61,14 +69,14 @@ const Subscribe: React.FC<Props> = ({ validation }: Props) => {
               type="text"
               name="name"
               placeholder="Nome"
-              className={`form-field field-name ${!state.valid && 'invalid'}`}
+              className={`form-field field-name ${!state.validName ? 'invalid' : 'valid'}`}
               onChange={handleInputChange}
             />
             <input
               type="email"
               name="email"
               placeholder="Email"
-              className={`form-field field-email ${!state.valid && 'invalid'}`}
+              className={`form-field field-email ${!state.validEmail && 'invalid'}`}
               onChange={handleInputChange}
             />
             <div role="errors">
@@ -78,7 +86,7 @@ const Subscribe: React.FC<Props> = ({ validation }: Props) => {
           <button
             role="submit"
             type="submit"
-            disabled={!state.valid}
+            disabled={!state.validEmail && !state.validName}
             className={`submitBtn ${state.loading && 'loading'}`}
           >
             Cadastrar
