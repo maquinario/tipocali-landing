@@ -50,19 +50,23 @@ describe('Subscribe Component', () => {
   test('Should show name error if validation fails', () => {
     const { sut } = makeSut()
     const nameInput = sut.getByPlaceholderText('Nome')
-    const errorContainer = sut.getByRole('errors')
     const name = `${faker.name.firstName()} ${faker.name.lastName()}`
     fireEvent.input(nameInput, { target: { value: name } })
     expect(nameInput.classList).toContain('invalid')
-    expect(errorContainer.childElementCount).toBeTruthy()
   })
   test('Should show email error if validation fails', () => {
     const { sut } = makeSut()
     const emailInput = sut.getByPlaceholderText('Email')
-    const errorContainer = sut.getByRole('errors')
     const email = faker.internet.email()
     fireEvent.input(emailInput, { target: { value: email } })
     expect(emailInput.classList).toContain('invalid')
-    expect(errorContainer.childElementCount).toBeTruthy()
+  })
+  test('Should not add invalid class to name input if Validation succeeds', () => {
+    const { sut, validationSpy } = makeSut()
+    validationSpy.errorMessage = null
+    const nameInput = sut.getByPlaceholderText('Nome')
+    const name = `${faker.name.firstName()} ${faker.name.lastName()}`
+    fireEvent.input(nameInput, { target: { value: name } })
+    expect(nameInput.classList).not.toContain('invalid')
   })
 })
