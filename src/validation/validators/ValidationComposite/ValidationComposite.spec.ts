@@ -26,4 +26,9 @@ describe('ValidationComposite', () => {
     const error = sut.validate(fieldName, faker.random.word())
     expect(error).toBe(errorMessage)
   })
+  test('Should return error if any validation fails', () => {
+    const { sut } = makeSut()
+    const error = sut.validate(fieldName, faker.random.word())
+    expect(error).toBeFalsy()
+  })
 })
