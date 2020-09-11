@@ -42,7 +42,7 @@ const SubscribePage: React.FC<Props> = ({ validation, subscribe }: Props) => {
       setState({
         ...state,
         loading: false,
-        mainError: error.name
+        mainError: error.message
       })
     }
     setState({ ...state, loading: false })
